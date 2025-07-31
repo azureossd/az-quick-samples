@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration file
+name: webapp-database-sample
+metadata:
+  template: webapp-database-sample@1.0.0
+services:
+  web:
+    project: ./src
+    language: dotnet
+    host: appservice

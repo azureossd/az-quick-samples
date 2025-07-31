@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App with Database Sample</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #106ebe;
+        }
+        .messages {
+            margin-top: 30px;
+        }
+        .message {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #0078d4;
+        }
+        .message-time {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Web App with Database Sample</h1>
+        
+        <div class="form-group">
+            <label for="messageInput">Add a new message:</label>
+            <input type="text" id="messageInput" placeholder="Enter your message here..." />
+        </div>
+        
+        <button onclick="addMessage()">Add Message</button>
+        <button onclick="loadMessages()" style="margin-left: 10px; background-color: #6c757d;">Refresh Messages</button>
+        
+        <div id="status"></div>
+        
+        <div class="messages">
+            <h3>Messages from Database:</h3>
+            <div id="messagesList">
+                <p>Loading messages...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load messages when page loads
+        window.onload = function() {
+            loadMessages();
+        };
+
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        async function addMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                showStatus('Please enter a message', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                if (response.ok) {
+                    messageInput.value = '';
+                    showStatus('Message added successfully!');
+                    loadMessages();
+                } else {
+                    const error = await response.json();
+                    showStatus(`Error: ${error.error}`, true);
+                }
+            } catch (error) {
+                showStatus('Failed to add message. Please try again.', true);
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch('/api/messages');
+                if (response.ok) {
+                    const messages = await response.json();
+                    displayMessages(messages);
+                } else {
+                    document.getElementById('messagesList').innerHTML = 
+                        '<p style="color: red;">Failed to load messages from database.</p>';
+                }
+            } catch (error) {
+                document.getElementById('messagesList').innerHTML = 
+                    '<p style="color: red;">Error connecting to the server.</p>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const messagesList = document.getElementById('messagesList');
+            
+            if (messages.length === 0) {
+                messagesList.innerHTML = '<p>No messages yet. Add the first one!</p>';
+                return;
+            }
+            
+            const messagesHtml = messages.map(msg => `
+                <div class="message">
+                    <div>${msg.message}</div>
+                    <div class="message-time">Added: ${new Date(msg.created_at).toLocaleString()}</div>
+                </div>
+            `).join('');
+            
+            messagesList.innerHTML = messagesHtml;
+        }
+
+        // Allow Enter key to add message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addMessage();
+            }
+        });
+    </script>
+</body>
+</html>

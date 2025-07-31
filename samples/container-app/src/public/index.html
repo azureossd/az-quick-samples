@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container App Sample</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .info-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin-right: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button.secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+        button.danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        .messages {
+            margin-top: 30px;
+        }
+        .message {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+            position: relative;
+        }
+        .message-content {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .message-time {
+            color: #718096;
+            font-size: 12px;
+        }
+        .message-actions {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        .app-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .info-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4a5568;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐳 Container App Sample</h1>
+        <p class="subtitle">Running on Azure Container Apps</p>
+        
+        <div class="info-section">
+            <h3>📊 Application Information</h3>
+            <div class="app-info" id="appInfo">
+                <div class="info-card">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">Loading...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="messageInput">💬 Add a new message:</label>
+            <input type="text" id="messageInput" placeholder="Type your message here..." />
+        </div>
+        
+        <button onclick="addMessage()">➕ Add Message</button>
+        <button onclick="loadMessages()" class="secondary">🔄 Refresh</button>
+        
+        <div id="status"></div>
+        
+        <div class="messages">
+            <h3>📝 Messages:</h3>
+            <div id="messagesList">
+                <p>Loading messages...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load data when page loads
+        window.onload = function() {
+            loadMessages();
+            loadAppInfo();
+        };
+
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 4000);
+        }
+
+        async function loadAppInfo() {
+            try {
+                const response = await fetch('/api/info');
+                if (response.ok) {
+                    const info = await response.json();
+                    displayAppInfo(info);
+                }
+            } catch (error) {
+                console.error('Error loading app info:', error);
+            }
+        }
+
+        function displayAppInfo(info) {
+            const appInfoDiv = document.getElementById('appInfo');
+            appInfoDiv.innerHTML = `
+                <div class="info-card">
+                    <div class="info-label">Environment</div>
+                    <div class="info-value">${info.environment}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Node Version</div>
+                    <div class="info-value">${info.nodeVersion}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Container</div>
+                    <div class="info-value">${info.containerInfo.hostname}</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Platform</div>
+                    <div class="info-value">${info.containerInfo.platform}/${info.containerInfo.arch}</div>
+                </div>
+            `;
+        }
+
+        async function addMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                showStatus('Please enter a message', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                if (response.ok) {
+                    messageInput.value = '';
+                    showStatus('Message added successfully! 🎉');
+                    loadMessages();
+                } else {
+                    const error = await response.json();
+                    showStatus(`Error: ${error.error}`, true);
+                }
+            } catch (error) {
+                showStatus('Failed to add message. Please try again.', true);
+                console.error('Error:', error);
+            }
+        }
+
+        async function deleteMessage(id) {
+            try {
+                const response = await fetch(`/api/messages/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showStatus('Message deleted! 🗑️');
+                    loadMessages();
+                } else {
+                    showStatus('Failed to delete message', true);
+                }
+            } catch (error) {
+                showStatus('Error deleting message', true);
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch('/api/messages');
+                if (response.ok) {
+                    const messages = await response.json();
+                    displayMessages(messages);
+                } else {
+                    document.getElementById('messagesList').innerHTML = 
+                        '<p style="color: red;">Failed to load messages.</p>';
+                }
+            } catch (error) {
+                document.getElementById('messagesList').innerHTML = 
+                    '<p style="color: red;">Error connecting to the server.</p>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const messagesList = document.getElementById('messagesList');
+            
+            if (messages.length === 0) {
+                messagesList.innerHTML = '<p>No messages yet. Add the first one! 🚀</p>';
+                return;
+            }
+            
+            const messagesHtml = messages.map(msg => `
+                <div class="message">
+                    <div class="message-actions">
+                        <button class="delete-btn" onclick="deleteMessage(${msg.id})">Delete</button>
+                    </div>
+                    <div class="message-content">${msg.message}</div>
+                    <div class="message-time">Added: ${new Date(msg.timestamp).toLocaleString()}</div>
+                </div>
+            `).join('');
+            
+            messagesList.innerHTML = messagesHtml;
+        }
+
+        // Allow Enter key to add message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addMessage();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Azure Developer CLI (azd) configuration file
+name: container-app-sample
+metadata:
+  template: container-app-sample@1.0.0
+services:
+  app:
+    project: ./src
+    host: containerapp
+    language: docker
+    docker:
+      registry: "{{ AZURE_CONTAINER_REGISTRY_ENDPOINT }}"

@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration file
+name: ai-chat-app-sample
+metadata:
+  template: ai-chat-app-sample@1.0.0
+services:
+  web:
+    project: ./src
+    language: python
+    host: appservice

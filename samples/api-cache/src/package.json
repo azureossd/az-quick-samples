@@ -1,0 +1,24 @@
+{
+  "name": "api-cache-sample",
+  "version": "1.0.0",
+  "description": "REST API with Redis Cache sample for Azure",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": ["azure", "redis", "cache", "api", "nodejs", "express"],
+  "author": "Azure Samples",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "redis": "^4.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

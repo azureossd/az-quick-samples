@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration file
+name: static-web-app-sample
+metadata:
+  template: static-web-app-sample@1.0.0
+services:
+  web:
+    project: ./src
+    host: staticwebapp
+    language: js

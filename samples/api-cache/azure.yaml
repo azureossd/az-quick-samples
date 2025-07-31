@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration file
+name: api-cache-sample
+metadata:
+  template: api-cache-sample@1.0.0
+services:
+  api:
+    project: ./src
+    language: dotnet
+    host: appservice
