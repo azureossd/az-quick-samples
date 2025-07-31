@@ -5,5 +5,5 @@ metadata:
 services:
   api:
     project: ./src
-    language: dotnet
+    language: js
     host: appservice

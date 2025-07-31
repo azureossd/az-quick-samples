@@ -102,11 +102,14 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
           value: 'true'
         }
         {
-          name: 'ASPNETCORE_ENVIRONMENT'
-          value: 'Production'
+          name: 'NODE_ENV'
+          value: 'production'
+        }
+        {
+          name: 'WEBSITE_NODE_DEFAULT_VERSION'
+          value: '~18'
         }
       ]
-      netFrameworkVersion: 'v8.0'
       use32BitWorkerProcess: false
       alwaysOn: appServicePlanSku != 'B1' ? true : false
     }

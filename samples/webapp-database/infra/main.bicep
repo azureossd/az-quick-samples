@@ -48,7 +48,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
     name: appServicePlanSku
   }
   properties: {
-    reserved: false // Windows app service plan
+    reserved: true // Linux app service plan for Python
   }
 }
 
@@ -96,12 +96,14 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
   name: webAppName
   location: location
   tags: union(allTags, { 'azd-service-name': 'web' })
-  kind: 'app'
+  kind: 'app,linux'
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
       minTlsVersion: '1.2'
+      ftpsState: 'Disabled'
+      linuxFxVersion: 'PYTHON|3.11'
       connectionStrings: [
         {
           name: 'DefaultConnection'
@@ -115,11 +117,10 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
           value: 'Server=tcp:${sqlServer.properties.fullyQualifiedDomainName},1433;Initial Catalog=${sqlDatabase.name};Persist Security Info=False;User ID=${sqlAdminUsername};Password=${sqlAdminPassword};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
         }
         {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '~18'
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'true'
         }
       ]
-      netFrameworkVersion: 'v6.0'
       use32BitWorkerProcess: false
       alwaysOn: appServicePlanSku != 'B1' ? true : false
     }
