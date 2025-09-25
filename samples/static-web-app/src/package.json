@@ -1,0 +1,16 @@
+{
+  "name": "azure-static-web-app-sample",
+  "version": "1.0.0",
+  "description": "Azure Static Web App sample application",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000",
+    "build": "echo 'No build process needed for static files'"
+  },
+  "keywords": ["azure", "static-web-app", "sample"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

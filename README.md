@@ -6,10 +6,11 @@ A collection of ready-to-deploy Azure sample projects using Azure Developer CLI 
 
 1. **Web App + Database** - Simple web application with Azure SQL Database
 2. **Container App** - Containerized application with Azure Container Apps
-3. **Function App + Storage** - Azure Functions with Blob Storage
-4. **Static Web App** - Frontend application with Azure Static Web Apps
-5. **API + Cache** - REST API with Azure Cache for Redis
-6. **AI Chat App** - Chat application with Azure OpenAI
+3. **FastAPI Web App** - Python FastAPI application with RESTful API
+4. **Function App + Storage** - Azure Functions with Blob Storage
+5. **Static Web App** - Frontend application with Azure Static Web Apps
+6. **API + Cache** - REST API with Azure Cache for Redis
+7. **AI Chat App** - Chat application with Azure OpenAI
 
 ## Quick Start
 

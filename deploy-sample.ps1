@@ -37,6 +37,12 @@ $samples = @(
         Path = "samples/container-app"
     },
     @{
+        Name = "fastapi-webapp"
+        DisplayName = "FastAPI Web App"
+        Description = "Python FastAPI application with RESTful API and App Service Linux"
+        Path = "samples/fastapi-webapp"
+    },
+    @{
         Name = "function-storage"
         DisplayName = "Function App + Storage"
         Description = "Azure Functions with Blob Storage and monitoring"

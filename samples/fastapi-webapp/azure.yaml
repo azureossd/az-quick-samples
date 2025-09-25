@@ -1,0 +1,9 @@
+# Azure Developer CLI (azd) configuration file
+name: fastapi-webapp-sample
+metadata:
+  template: fastapi-webapp-sample@1.0.0
+services:
+  web:
+    project: ./src
+    language: python
+    host: appservice
